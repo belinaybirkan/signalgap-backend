@@ -1,0 +1,28 @@
+[
+  {
+    "id": 1,
+    "title": "Yedekler gerçekten geri yüklenebiliyor mu?",
+    "description": "Son geri yükleme tatbikatı için doğrulanmış bir kayıt bulunamıyor.",
+    "category": "infrastructure",
+    "riskLevel": "high",
+    "priority": "high",
+    "status": "investigating",
+    "assignee": "Deniz",
+    "resolution": "",
+    "createdAt": "2026-10-01T09:00:00.000Z",
+    "updatedAt": "2026-10-01T09:00:00.000Z"
+  },
+  {
+    "id": 2,
+    "title": "Eski bildirim servisini hangi modüller kullanıyor?",
+    "description": "Servisin kaldırılmadan önce bağımlılıklarının haritalanması gerekiyor.",
+    "category": "architecture",
+    "riskLevel": "medium",
+    "priority": "medium",
+    "status": "discovered",
+    "assignee": "Ece",
+    "resolution": "",
+    "createdAt": "2026-10-02T12:00:00.000Z",
+    "updatedAt": "2026-10-02T12:00:00.000Z"
+  }
+]
