@@ -1,18 +1,12 @@
 # SignalGap Backend
 
-**SignalGap**, bir yazılım ekibinde henüz net cevaplanmamış teknik soruları, operasyonel riskleri ve gözden kaçabilecek konuları takip etmek için hazırladığım REST API projesidir.
+SignalGap, yazılım ekiplerinin henüz cevabı bulunmayan teknik sorularını ve operasyonel risklerini takip etmek için hazırlanmış bir Node.js / Express REST API projesidir. Her kaydın başlığı, açıklaması, sorumlusu, önceliği, risk seviyesi ve durumu vardır.
 
-Bir işin henüz hata olarak ortaya çıkmamış olması, takip edilmesine gerek olmadığı anlamına gelmez. Örneğin yedeklerin geri yüklenip yüklenemediğinin bilinmemesi veya eski bir servisin hangi modüller tarafından kullanıldığının net olmaması bu sisteme kayıt edilebilir.
+Bu bir **backend projesi**. Web arayüzü yok; API'yi Postman üzerinden kullanıyoruz.
 
-## Kullanılan teknolojiler
+## Kurulum ve çalıştırma
 
-- Node.js (18 veya üzeri)
-- Express.js
-- JavaScript (CommonJS)
-- JSON dosyasıyla kalıcı veri saklama
-- Postman ile API testi
-
-## Kurulum
+Bilgisayarda Node.js 18 veya üzeri, Git ve Postman kurulu olmalı. Terminalde:
 
 ```bash
 git clone https://github.com/belinaybirkan/signalgap-backend.git
@@ -21,28 +15,37 @@ npm install
 npm start
 ```
 
-Sunucu varsayılan olarak **http://localhost:3000** üzerinde çalışır. Tarayıcıdan `http://localhost:3000/health` adresini açarak deneyebilirsin.
+Terminalde `SignalGap çalışıyor: http://localhost:3000` mesajını görmelisin. Tarayıcıdan `http://localhost:3000/health` aç; beklenen yanıt:
 
-## Temel endpointler
+```json
+{"status":"ok","service":"SignalGap"}
+```
 
-| Method | Adres | Açıklama |
-|---|---|---|
-| GET | /gaps | Tüm kayıtları listele |
-| GET | /gaps/:id | Tek bir kaydı getir |
-| POST | /gaps | Yeni kayıt oluştur |
-| PUT | /gaps/:id | Kaydı güncelle |
-| DELETE | /gaps/:id | Kaydı sil |
+Postman testleri bitene kadar bu terminali **kapatma**. Başka bir terminalde otomatik testleri çalıştırabilirsin:
 
-İsteğe bağlı ek endpointler: `GET /gaps?status=investigating`, `GET /gaps?priority=high`, `GET /gaps/search?keyword=yedek`, `GET /reports/summary`, `GET /reports/completed`, `GET /reports/pending`.
+```bash
+npm test
+npm run test:http
+```
 
-## Örnek kayıt oluşturma
+`npm run test:http` komutunu kullanırken API'nin açık olması gerekir. İlk komut iş mantığı testlerini, ikincisi çalışan sunucunun HTTP endpointlerini test eder.
 
-`POST http://localhost:3000/gaps`
+## Beş temel CRUD endpointi
+
+| İşlem | Yöntem | Adres | Başarılı durum kodu |
+|---|---|---|---|
+| Kayıt oluştur | POST | `/gaps` | 201 |
+| Kayıtları listele | GET | `/gaps` | 200 |
+| Kayıt detayı | GET | `/gaps/:id` | 200 |
+| Kayıt güncelle | PUT | `/gaps/:id` | 200 |
+| Kayıt sil | DELETE | `/gaps/:id` | 204 |
+
+Örnek POST gövdesi:
 
 ```json
 {
   "title": "Yedekler geri yüklenebiliyor mu?",
-  "description": "Son geri yükleme testinin kaydı bulunamadı.",
+  "description": "Son test kaydı bulunamadı.",
   "priority": "high",
   "assignee": "Deniz",
   "riskLevel": "high",
@@ -50,34 +53,59 @@ Sunucu varsayılan olarak **http://localhost:3000** üzerinde çalışır. Taray
 }
 ```
 
-Zorunlu alanlar `title`, `description`, `priority`, `assignee`. `priority` ve `riskLevel`: `low`, `medium`, `high`. Durum değerleri: `discovered`, `investigating`, `verified`, `resolved`, `accepted-risk`.
+Zorunlu alanlar: `title`, `description`, `priority`, `assignee`. Seviye değerleri `low`, `medium`, `high`; durum değerleri `discovered`, `investigating`, `verified`, `resolved`, `accepted-risk`.
 
-## Testler
+## Postman'de test etme
 
-```bash
-npm test
-```
+1. Postman uygulamasını aç.
+2. **Import → File** ile [Postman koleksiyonunu](postman/SignalGap.postman_collection.json) içe aktar. Dosyayı repodan indirmen veya klonlanmış klasörden seçmen yeterli.
+3. Koleksiyon değişkenlerinde `baseUrl = http://localhost:3000` olmalı.
+4. **01 – Zorunlu CRUD Testleri** klasöründe `POST → GET liste → GET detay → PUT → DELETE` sırasını izle.
+5. POST isteğinin yanıtından gelen `id`, başarılı isteğin ardından otomatik olarak `gapId` koleksiyon değişkenine kaydedilir. Böylece `/gaps/{{gapId}}` çalışan kaydın ID'sini kullanır.
+6. Her isteği **Send** ile gönder ve HTTP durum kodu, URL ve yanıt alanı görünürken ekran görüntüsünü al.
+7. Beş PNG dosyasını [screenshots klasörüne](screenshots/README.md) ekle. Gerçek Postman ekran görüntüleri henüz repoda yoktur ve ayrıca çekilmelidir.
 
-Sunucu çalışırken, başka terminalden:
+Ayrıntılı yönerge: [Postman ve teslim adımları](docs/TEST_VE_TESLIM_REHBERI.md).
 
-```bash
-npm run test:http
-```
+## Ek özellikler
 
-Postman koleksiyonunu `postman/SignalGap.postman_collection.json` yolundan içe aktarabilirsin. Test ekran görüntülerini `screenshots/` içine kaydet. Gerçek ekran görüntüleri ayrıca oluşturulmalıdır.
+- `GET /gaps?status=investigating`: duruma göre filtreleme
+- `GET /gaps?priority=high`: önceliğe göre filtreleme
+- `GET /gaps/search?keyword=yedek`: arama
+- `GET /gaps/assignee/Deniz`: sorumluya göre listeleme
+- `GET /gaps?page=1&limit=5`: sayfalama
+- `GET /reports/summary`, `/reports/completed`, `/reports/pending`: raporlar
 
-## Proje dosyaları
+Logger middleware gelen isteklerin zamanını, HTTP yöntemini ve URL'sini terminale yazar. Uygun olmayan kayıt verilerinde 400, olmayan kayıt ID'sinde 404 döner.
+
+## Klasör yapısı
 
 - `src/routes`: API yolları
-- `src/controllers`: İstek ve yanıt işlemleri
-- `src/services`: Görev yönetiminin iş mantığı
-- `src/middleware`: Logger, doğrulama ve hata yönetimi
-- `src/data/gaps.json`: Örnek kayıtlar
-- `tests`: Otomatik testler
-- `docs`: Proje tasarımı ve teslim belgeleri
+- `src/controllers`: istek-yanıt işlemleri
+- `src/services`: iş kuralları
+- `src/middleware`: logger, validation, hata yönetimi
+- `src/utils`: JSON dosyasını okuma/yazma
+- `src/data/gaps.json`: örnek kayıtlar (API bu dosyayı değiştirir)
+- `postman`: API test koleksiyonu
+- `tests`: otomatik testler
+- `docs`: proje ve teslim dokümanları
+- `screenshots`: Postman test ekran görüntülerinin ekleneceği klasör
 
-Proje tanıtımı, kurulum notu ve API kullanım bilgileri `docs/` altındadır. Belgelerin Word/PDF kopyaları sohbetin teslim ZIP paketinde de bulunur.
+## Teslim kontrolü
 
-## Teslim notu
+- [x] Public GitHub repository ve kaynak kodları
+- [x] README, Postman koleksiyonu ve otomatik testler
+- [ ] Proje tasarım PDF'i ve kurulum notu PDF'i GitHub'daki `docs/` klasörüne eklenmeli (PDF'ler ders formuna ayrıca yüklenebilir)
+- [ ] Gerçek beş Postman ekran görüntüsü alınıp `screenshots/` klasörüne eklenmeli
+- [ ] İki PDF, ekran görüntüleri ve GitHub bağlantısı ders formuna gönderilmeli
 
-Ders formuna proje tasarım PDF'i, kurulum notu PDF'i, Postman'dan alınan gerçek CRUD ekran görüntüleri ve bu repoya ait bağlantı eklenmelidir.
+**GitHub bağlantısı:** https://github.com/belinaybirkan/signalgap-backend
+
+### Sorun yaşarsan
+
+- `npm is not recognized` → Node.js LTS kur, terminali yeniden aç.
+- PowerShell `npm.ps1 cannot be loaded` → `npm.cmd install` ve `npm.cmd start` komutlarını kullan veya VS Code'da Command Prompt aç.
+- `Cannot find module 'express'` → proje klasöründe `npm install` çalıştır.
+- Postman `ECONNREFUSED 127.0.0.1:3000` → sunucu kapalıdır; `npm start` terminalini kontrol et.
+- `EADDRINUSE: 3000` → başka bir uygulama portu kullanıyor; o uygulamayı kapat veya PORT'u değiştir.
+- `404` → URL'yi veya kayıt ID'sini kontrol et. `GET /gaps/9999` ile var olmayan kayıt sorgulanabilir.
