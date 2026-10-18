@@ -77,5 +77,6 @@ Postman için [koleksiyon dosyasını](postman/SignalGap.postman_collection.json
 
 - [Proje tanıtımı](docs/PROJE_TANITIMI.md)
 - [API notları](docs/API.md)
-- [Kurulum ve Postman testleri](docs/TEST_VE_TESLIM_REHBERI.md)
+- [Proje tasarım belgesi (PDF)](docs/SignalGap-Tasarim.pdf)
+- [Kurulum notu (PDF)](docs/SignalGap-Kurulum.pdf)
 
