@@ -1,0 +1,476 @@
+{
+  "info": {
+    "name": "SignalGap REST API",
+    "description": "SignalGap /gaps CRUD ve ek servis testleri. Sırasıyla çalıştırın; POST isteği gapId değişkenini kaydeder.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000"
+    },
+    {
+      "key": "gapId",
+      "value": "1"
+    }
+  ],
+  "item": [
+    {
+      "name": "01 - Sağlık kontrolü",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/health",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "health"
+          ]
+        }
+      }
+    },
+    {
+      "name": "02 - Oluştur (POST)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"HTTP 201\", () => pm.response.to.have.status(201));",
+              "pm.collectionVariables.set('gapId', pm.response.json().data.id);"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"Yedek kontrolü\",\n  \"description\": \"Son test kaydı bulunamadı\",\n  \"priority\": \"high\",\n  \"assignee\": \"Deniz\",\n  \"riskLevel\": \"high\",\n  \"category\": \"infrastructure\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/gaps",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "gaps"
+          ]
+        }
+      }
+    },
+    {
+      "name": "03 - Listele (GET)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/gaps",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "gaps"
+          ]
+        }
+      }
+    },
+    {
+      "name": "04 - Detay (GET)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/gaps/{{gapId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "gaps",
+            "{{gapId}}"
+          ]
+        }
+      }
+    },
+    {
+      "name": "05 - Güncelle (PUT)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"status\": \"resolved\",\n  \"resolution\": \"Yedek geri yükleme testi tamamlandı\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/gaps/{{gapId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "gaps",
+            "{{gapId}}"
+          ]
+        }
+      }
+    },
+    {
+      "name": "06 - Duruma göre filtrele",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/gaps?status=resolved",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "gaps?status=resolved"
+          ]
+        }
+      }
+    },
+    {
+      "name": "07 - Önceliğe göre filtrele",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/gaps?priority=high",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "gaps?priority=high"
+          ]
+        }
+      }
+    },
+    {
+      "name": "08 - Arama",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/gaps/search?keyword=yedek",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "gaps",
+            "search?keyword=yedek"
+          ]
+        }
+      }
+    },
+    {
+      "name": "09 - Sorumluya göre listele",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/gaps/assignee/Deniz",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "gaps",
+            "assignee",
+            "Deniz"
+          ]
+        }
+      }
+    },
+    {
+      "name": "10 - Sayfalama",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/gaps?page=1&limit=5",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "gaps?page=1&limit=5"
+          ]
+        }
+      }
+    },
+    {
+      "name": "11 - Rapor özeti",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/reports/summary",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "reports",
+            "summary"
+          ]
+        }
+      }
+    },
+    {
+      "name": "12 - Tamamlanan raporu",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/reports/completed",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "reports",
+            "completed"
+          ]
+        }
+      }
+    },
+    {
+      "name": "13 - Bekleyen raporu",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/reports/pending",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "reports",
+            "pending"
+          ]
+        }
+      }
+    },
+    {
+      "name": "14 - Validation hatası",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"HTTP 400\", () => pm.response.to.have.status(400));"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/gaps",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "gaps"
+          ]
+        }
+      }
+    },
+    {
+      "name": "15 - Sil (DELETE)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"HTTP 204\", () => pm.response.to.have.status(204));"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/gaps/{{gapId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "gaps",
+            "{{gapId}}"
+          ]
+        }
+      }
+    }
+  ]
+}
