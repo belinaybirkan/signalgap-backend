@@ -1,23 +1,43 @@
-# API Kısa Dokümantasyonu
+# API notları
 
-Temel URL: `http://localhost:3000`
+Temel adres: `http://localhost:3000`
 
-| Method | Endpoint | Açıklama |
-|---|---|---|
-| GET | `/health` | Sağlık kontrolü |
-| GET | `/gaps` | Listele (durum, öncelik, risk, kategori, sorumlu filtreleri) |
-| GET | `/gaps/:id` | Detay |
-| POST | `/gaps` | Oluştur |
-| PUT | `/gaps/:id` | Güncelle |
-| DELETE | `/gaps/:id` | Sil (204) |
-| GET | `/gaps/search?keyword=yedek` | Ara |
-| GET | `/gaps/assignee/Deniz` | Sorumluya göre listele |
-| GET | `/reports/summary` | Özet |
-| GET | `/reports/completed` | Tamamlanan |
-| GET | `/reports/pending` | Bekleyen |
+| Method | Endpoint | Açıklama | Başarılı kod |
+| --- | --- | --- | --- |
+| GET | `/health` | Sunucu kontrolü | 200 |
+| POST | `/gaps` | Kayıt ekleme | 201 |
+| GET | `/gaps` | Kayıtları listeleme | 200 |
+| GET | `/gaps/:id` | Kayıt detayı | 200 |
+| PUT | `/gaps/:id` | Kayıt güncelleme | 200 |
+| DELETE | `/gaps/:id` | Kayıt silme | 204 |
+| GET | `/gaps/search?keyword=yedek` | Başlık/açıklama araması | 200 |
+| GET | `/gaps/assignee/Deniz` | Sorumluya göre listeleme | 200 |
+| GET | `/reports/summary` | Genel rapor | 200 |
+| GET | `/reports/completed` | Kapanan kayıt sayısı | 200 |
+| GET | `/reports/pending` | Açık kayıt sayısı | 200 |
 
-POST için zorunlu alanlar: `title`, `description`, `priority`, `assignee`.
+Listeleme için ayrıca `status`, `priority`, `riskLevel`, `assignee`, `category`, `page`, `limit`, `sort` ve `order` sorgu parametreleri kullanılabilir.
 
-Geçerli priority ve riskLevel değerleri: `low`, `medium`, `high`. Geçerli status değerleri: `discovered`, `investigating`, `verified`, `resolved`, `accepted-risk`.
+**POST /gaps** için zorunlu alanlar: `title`, `description`, `priority`, `assignee`.
 
-Listeleme için `page`, `limit`, `sort`, `order` query parametreleri desteklenir. Hatalı isteklerde açıklamalı HTTP 400, bulunamayan ID için HTTP 404 yanıtı döner.
+```json
+{
+  "title": "Eski servis hâlâ kullanılıyor mu?",
+  "description": "Bağımlılıkları kontrol etmek gerekiyor.",
+  "priority": "medium",
+  "assignee": "Ece",
+  "category": "architecture",
+  "riskLevel": "medium"
+}
+```
+
+**PUT /gaps/:id** için yalnızca değiştirilecek alanları göndermek yeterlidir:
+
+```json
+{
+  "status": "resolved",
+  "resolution": "Bağımlılıklar incelendi."
+}
+```
+
+Hatalı veya eksik veride `400 Bad Request`, bulunamayan kayıt için `404 Not Found` döner. Silme işleminde `204 No Content` yanıtının gövdesi boştur.
