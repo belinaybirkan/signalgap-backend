@@ -62,7 +62,7 @@ docs/            Proje ve kurulum notları
 screenshots/     Postman test ekran görüntüleri
 ```
 
-Veriler şimdilik `src/data/gaps.json` dosyasında tutuluyor. Veritabanı veya kullanıcı giriş sistemi kullanılmadı; proje temel REST API ve CRUD mantığına odaklanıyor.
+
 
 ## Test
 
@@ -72,8 +72,7 @@ npm test
 
 Bu komut birim testlerini çalıştırır. Sunucu `npm start` ile açıkken farklı bir terminalde `npm run test:http` komutuyla HTTP isteklerini de deneyebilirsin.
 
-Postman için [koleksiyon dosyasını](postman/SignalGap.postman_collection.json) içe aktar. `01 – Zorunlu CRUD Testleri` klasörünü POST, GET, GET detay, PUT ve DELETE sırasıyla çalıştır. Ekran görüntülerinin adları ve teslim işlemleri için [test notuna](docs/TEST_VE_TESLIM_REHBERI.md) bakabilirsin.
-
+Postman için [koleksiyon dosyasını](postman/SignalGap.postman_collection.json) içe aktar. `01 – Zorunlu CRUD Testleri` klasörünü POST, GET, GET detay, PUT ve DELETE sırasıyla çalıştır. 
 ## Belgeler
 
 - [Proje tanıtımı](docs/PROJE_TANITIMI.md)
