@@ -80,4 +80,3 @@ Postman için [koleksiyon dosyasını](postman/SignalGap.postman_collection.json
 - [API notları](docs/API.md)
 - [Kurulum ve Postman testleri](docs/TEST_VE_TESLIM_REHBERI.md)
 
-Ders tesliminde ayrıca proje tasarım PDF'i, kurulum PDF'i ve Postman'dan alınmış beş test ekran görüntüsü kullanılacaktır.
